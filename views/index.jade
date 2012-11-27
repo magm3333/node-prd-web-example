@@ -1,0 +1,115 @@
+extends layout
+
+block content
+	img(src='img/eglubi.png')
+	h1= title
+	p Options
+	div#data
+		ul.nav.nav-list
+			li
+				a#addRow(href='#') 
+					i.icon-align-justify 
+					span Add new row
+			li
+				a#doReport(href='#')
+					i.icon-eye-open
+					span Do Report!
+			label Output type:
+				select#outputType.input-small.shadow_slect
+					option#pdf(selected='true') PDF
+					option#rtf RTF
+					option#html HTML
+					option#ExcelXLS EXCEL (XLS)
+					option#ExcelXLSX EXCEL (XLSX) 
+			label Report title:
+				input.span5(id='title',type='text',value='Sales by Zone')
+
+		hr
+		div.container
+			table#tabla
+				thead
+					tr
+						td.pagination-centered(colspan='3')
+							span Sales by Customer 
+								span#rowsNum - (1 row.)
+					tr
+						td Zone
+						td Customer
+						td Sales
+				tbody
+					tr
+						td
+							input.span2(name='zone',type='text',value='East',disabled='true')
+						td
+							input.span2(name='customer',type='text',value='Customer 1',disabled='true')
+						td
+							input.span2.pagination-right(name='sales',type='text',value='33',disabled='true')
+		hr
+	div#result.clear-fix(width='100%',height='800px')
+		ul.nav.nav-list
+			li
+				a#back(href='#') << Back
+		iframe#iresult(width='100%',height='800px')
+
+	script(type='text/javascript')
+		var sort_by = function(field, reverse, primer){
+			var key = function (x) {return primer ? primer(x[field]) : x[field]};
+				return function (a,b) {
+					var A = key(a), B = key(b);
+					return (A < B ? -1 : (A > B ? 1 : 0)) * [1,-1][+!!reverse];           
+				}
+		};
+		$(document).ready(function(){
+			$('#result').hide();
+			var zones=['East','West','South','North'];
+			$('#addRow').click(function(){
+				var fila = $("#tabla tr:last").clone(true);
+				$('td input[name=zone]',fila).val(zones[ Math.floor((Math.random()*4)) ]);
+				$('td input[name=customer]',fila).val('Customer ' + Math.floor((Math.random()*20)) );
+				$('td input[name=sales]',fila).val(Math.ceil((Math.random()*100)) );       
+				$("#tabla").append(fila);    
+				$("#rowsNum").html(' - ('+$('#tabla >tbody >tr').length+' rows.)');      
+			}); 
+
+			$('#doReport').click(function(){
+				var list = new Array();
+				$('#tabla >tbody >tr').each(function(){
+					var row={};
+					row.zone=$('td input[name=zone]',$(this)).val();
+					row.customer=$('td input[name=customer]',$(this)).val();
+					row.sales=$('td input[name=sales]',$(this)).val();						
+					list.push(row);
+				});
+				list.sort(sort_by('zone',false, function(a){return a.toUpperCase()}));
+
+				var table = new Array();
+				$(list).each(function(){
+					table.push([this.zone,this.customer,this.sales]);
+				});
+
+				var data={
+					title: $('#title').val(),
+					outputType: $('#outputType option:selected').attr('id'),
+					data:table
+				};
+				$.ajax({
+					async:true,    
+					cache:false,   
+					dataType:"json",
+					type: 'POST',   
+					url: "list",
+					data: data, 
+					success:  function(data){  
+						if(data.msg=='OK') {
+							$('#data').hide();
+							$('#result').show(500);
+							$('#iresult').attr('src',data.file);
+						}
+					}
+				});
+			});
+			$('#back').click(function(){
+				$('#result').hide();
+				$('#data').show(500);
+			});
+		});
