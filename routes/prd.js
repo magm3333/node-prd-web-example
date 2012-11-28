@@ -6,7 +6,7 @@ exports.list = function(req, res, nPrd){
 	var pathReports=path.resolve(__dirname+'/../reports');
 	console.log(JSON.stringify(req.body));
 	var json=req.body;
-	var fileout='index';	
+	var fileout='_'+new Date().getTime();	
 	console.log(json.data);	
 	var type=''
 	if(json.outputType=='ExcelXLS')
