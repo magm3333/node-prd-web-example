@@ -52,6 +52,8 @@ node-prd-web-example es 100% GNU GPLv3
 
 # English
 
+## A simple website that shows the power of node-prd
+
 ## Install & run
 
        git clone https://github.com/magm3333/node-prd-web-example node-prd-web-example

@@ -6,7 +6,7 @@ exports.list = function(req, res, nPrd){
 	var pathReports=path.resolve(__dirname+'/../reports');
 	console.log(JSON.stringify(req.body));
 	var json=req.body;
-	var fileout=new Date().getTime();	
+	var fileout='index';	
 	console.log(json.data);	
 	var type=''
 	if(json.outputType=='ExcelXLS')
@@ -17,7 +17,7 @@ exports.list = function(req, res, nPrd){
 		type=json.outputType;
 	var htmlFolder='';
 	if(type=='html')
-		htmlFolder='htmlOut';
+		htmlFolder='out_'+new Date().getTime();
 	var otherConfig={
 		reportBundlePath:  path.join(pathReports,'report.prpt'),
 		outputFilePath: path.join(pathOut,fileout+''),

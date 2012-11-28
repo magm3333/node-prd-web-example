@@ -45,11 +45,11 @@ block content
 						td
 							input.span2.pagination-right(name='sales',type='text',value='33',disabled='true')
 		hr
-	div#result.clear-fix(width='100%',height='800px')
+	div#result.clear-fix.pagination-centered(style='width=90%; height=800px')
 		ul.nav.nav-list
 			li
 				a#back(href='#') << Back
-		iframe#iresult(width='100%',height='800px')
+		iframe#iresult(style='border: 0px; width: 100%; height: 800px')
 
 	script(type='text/javascript')
 		var sort_by = function(field, reverse, primer){
@@ -86,10 +86,10 @@ block content
 				$(list).each(function(){
 					table.push([this.zone,this.customer,this.sales]);
 				});
-
+				var outType=$('#outputType option:selected').attr('id');
 				var data={
 					title: $('#title').val(),
-					outputType: $('#outputType option:selected').attr('id'),
+					outputType: outType,
 					data:table
 				};
 				$.ajax({
@@ -101,8 +101,10 @@ block content
 					data: data, 
 					success:  function(data){  
 						if(data.msg=='OK') {
-							$('#data').hide();
-							$('#result').show(500);
+							if (outType=='pdf' || outType=='html') {
+								$('#data').hide();
+								$('#result').show(500);
+							}
 							$('#iresult').attr('src',data.file);
 						}
 					}
