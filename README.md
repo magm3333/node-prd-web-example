@@ -69,7 +69,7 @@ RaaS server listen at port 3333
 - Java Development Kit (JDK) 1.6 or later
 - Pentaho Report Designer 3.9 or 4.0
 - Linux, Windows (not yet available) or MacOS (not yet available)
-- Environment variable PRD_HOME pointing to folder of PRD
+- Environment variable PRD_HOME pointing to PRD folder
 
 ## Special thanks to Dario Bernabeu for the report
 
